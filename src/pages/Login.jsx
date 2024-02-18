@@ -49,7 +49,7 @@ const Login = () => {
 		try {
 			const response = await loginUser(data);
 			// console.log(response);
-			console.log(response.data.user);
+			// console.log(response.data.user);
 			await dispatch(loggedInUser(response.data.user));
 		} catch (err) {
 			dispatch(userLoggedInError(err.toString()));
@@ -60,7 +60,7 @@ const Login = () => {
 		if (data?.token && getToken() === null) {
 			setToken(data?.token);
 			reset();
-			navigate('/', { state: location.pathname, replace: true });
+			navigate(location.state?.from || '/', { replace: true });
 		}
 		if (error) {
 			toast.error(error.data.message);

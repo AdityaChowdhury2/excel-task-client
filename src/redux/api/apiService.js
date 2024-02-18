@@ -17,7 +17,7 @@ export const apiService = createApi({
     endpoints: (builder) => ({
         getCurrentUser: builder.query({
             query: () => 'users/current',
-            providesTags: ['User'],
+            providesTags: ['Users'],
         }),
         createUser: builder.mutation({
             query: (newUser) => ({
@@ -25,8 +25,6 @@ export const apiService = createApi({
                 method: 'POST',
                 body: newUser,
             }),
-            // Pick out data and prevent nested properties in a hook or selector
-            // transformResponse: (response) => response,
         }),
         loginUser: builder.mutation({
             query: (user) => ({
@@ -34,12 +32,23 @@ export const apiService = createApi({
                 method: 'POST',
                 body: user
             }),
-            invalidatesTags: ['User']
+            invalidatesTags: ['Users']
         }),
-
+        addTask: builder.mutation({
+            query: (newTask) => ({
+                url: 'tasks',
+                method: 'POST',
+                body: newTask,
+            }),
+            invalidatesTags: ['Task'],
+        }),
+        getTasks: builder.query({
+            query: () => 'tasks',
+            providesTags: ['Task'],
+        })
 
     }),
 });
 
 
-export const { useCreateUserMutation, useLoginUserMutation, useGetCurrentUserQuery } = apiService;
+export const { useCreateUserMutation, useLoginUserMutation, useGetCurrentUserQuery, useAddTaskMutation } = apiService;
