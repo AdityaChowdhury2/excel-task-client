@@ -68,7 +68,7 @@ const Register = () => {
 									<input
 										type="text"
 										{...register('name')}
-										className="w-full -ml-10 pl-10 pr-3 py-2 bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
+										className="w-full text-base py-2 pl-3 rounded-md border-b border-gray-300 focus:outline-none focus:border-slate-500"
 										placeholder="John Doe"
 									/>
 								</div>
@@ -93,7 +93,7 @@ const Register = () => {
 									<input
 										type="email"
 										{...register('email')}
-										className="w-full -ml-10 pl-10 pr-3 py-2 bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
+										className="w-full text-base py-2 pl-3 rounded-md border-b border-gray-300 focus:outline-none focus:border-slate-500"
 										placeholder="johnsmith@example.com"
 									/>
 								</div>
@@ -119,7 +119,7 @@ const Register = () => {
 									<input
 										type={isShowPassword ? 'text' : 'password'}
 										{...register('password')}
-										className="w-full -ml-10 pl-10 pr-3 py-2 bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
+										className="w-full text-base py-2 pl-3 rounded-md border-b border-gray-300 focus:outline-none focus:border-slate-500"
 										placeholder="************"
 									/>
 									<div

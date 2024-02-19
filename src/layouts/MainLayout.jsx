@@ -4,15 +4,24 @@ import { RiMenu2Line } from 'react-icons/ri';
 // import { useGetCurrentUserQuery } from '../redux/api/apiService';
 import { useDispatch } from 'react-redux';
 import { useGetCurrentUserQuery } from '../redux/api/apiService';
-import { loggedInUser } from '../redux/features/auth/authSlice';
+import { loggedInUser, userLoading } from '../redux/features/auth/authSlice';
 import { removeToken } from '../utils/localDb';
+import { useEffect } from 'react';
 
 const MainLayout = () => {
 	// const { data: currentUser, isLoading, isError } = useGetCurrentUserQuery();
 
 	const dispatch = useDispatch();
-	const { data: currentUser, refetch } = useGetCurrentUserQuery();
-	// console.log(currentUser);
+	const { data: currentUser, isLoading, refetch } = useGetCurrentUserQuery();
+
+	useEffect(() => {
+		dispatch(userLoading());
+		console.log('current user is present1', isLoading);
+		if (!isLoading) {
+			console.log('current user is present');
+			dispatch(loggedInUser(currentUser?.user));
+		}
+	}, [isLoading]);
 
 	const navLinks = (
 		<>
@@ -29,7 +38,16 @@ const MainLayout = () => {
 				</NavLink>
 			</li>
 			<li>
-				<a>Sidebar Item 2</a>
+				<NavLink
+					to={'/create-project'}
+					className={({ isActive }) =>
+						isActive
+							? 'bg-slate-300 px-3 py-1 rounded-lg'
+							: 'py-1 px-3 rounded-lg'
+					}
+				>
+					Create project
+				</NavLink>
 			</li>
 		</>
 	);

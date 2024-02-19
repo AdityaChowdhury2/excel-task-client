@@ -45,10 +45,23 @@ export const apiService = createApi({
         getTasks: builder.query({
             query: () => 'tasks',
             providesTags: ['Task'],
-        })
+        }),
+        getUsers: builder.query({
+            query: (role) => `users?role=${role || ''}`,
+            // providesTags: ['Users'],
+        }),
+        addProject: builder.mutation({
+            query: (newProject) => ({
+                url: 'projects',
+                method: 'POST',
+                body: newProject,
+            }),
+            invalidatesTags: ['Projects'],
+        }),
+    })
 
-    }),
+
 });
 
 
-export const { useCreateUserMutation, useLoginUserMutation, useGetCurrentUserQuery, useAddTaskMutation } = apiService;
+export const { useCreateUserMutation, useLoginUserMutation, useGetCurrentUserQuery, useAddTaskMutation, useGetUsersQuery, useAddProjectMutation } = apiService;

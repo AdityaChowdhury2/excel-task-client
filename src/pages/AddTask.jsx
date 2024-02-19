@@ -24,7 +24,7 @@ const AddTask = () => {
 		handleSubmit,
 		control,
 		formState: { errors },
-		// reset,
+		reset,
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
@@ -34,6 +34,7 @@ const AddTask = () => {
 		const response = await addTask(data);
 		if (response.data?.insertedId) {
 			toast.success('Task added successfully', { id: toastId });
+			reset();
 		}
 	};
 
@@ -108,7 +109,7 @@ const AddTask = () => {
 									defaultValue={''}
 									render={({ field }) => (
 										<select
-											onChange={e => field.onChange(e.target.value)}
+											onChange={value => field.onChange(value)}
 											className="select select-bordered w-full "
 										>
 											<option value={''}>Select Priority Level</option>

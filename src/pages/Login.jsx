@@ -7,7 +7,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ErrorMessage } from '@hookform/error-message';
-import { useLoginUserMutation } from '../redux/api/apiService';
+import {
+	// useGetCurrentUserQuery,
+	useLoginUserMutation,
+} from '../redux/api/apiService';
 import { getToken, setToken } from '../utils/localDb';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
@@ -33,8 +36,12 @@ const Login = () => {
 		setIsShowWelComeMessage(location.state === '/register');
 	}, [location?.state]);
 
-	const [loginUser, { data, isLoading, error }] = useLoginUserMutation();
 	const dispatch = useDispatch();
+	// const { data: currentUser, isLoading } = useGetCurrentUserQuery();
+
+	const [loginUser, { data, isLoading: loginLoading, error }] =
+		useLoginUserMutation();
+
 	const {
 		register,
 		handleSubmit,
@@ -57,6 +64,12 @@ const Login = () => {
 	};
 
 	useEffect(() => {
+		// dispatch(userLoading());
+		// console.log('current user is present1', isLoading);
+		// if (!isLoading) {
+		// 	console.log('current user is present');
+		// 	dispatch(loggedInUser(currentUser?.user));
+		// }
 		if (data?.token && getToken() === null) {
 			setToken(data?.token);
 			reset();
@@ -96,7 +109,7 @@ const Login = () => {
 									<input
 										type="email"
 										{...register('email')}
-										className="w-full -ml-10 pl-10 pr-3 py-2 bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
+										className="w-full text-base py-2 pl-3 rounded-md border-b border-gray-300 focus:outline-none focus:border-slate-500"
 										placeholder="johnsmith@example.com"
 									/>
 								</div>
@@ -122,7 +135,7 @@ const Login = () => {
 									<input
 										type={isShowPassword ? 'text' : 'password'}
 										{...register('password')}
-										className="w-full -ml-10 pl-10 pr-3 py-2 bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
+										className="w-full text-base py-2 pl-3 rounded-md border-b border-gray-300 focus:outline-none focus:border-slate-500"
 										placeholder="************"
 									/>
 
@@ -152,7 +165,7 @@ const Login = () => {
 						<div className="flex -mx-3">
 							<div className="w-full px-3 mb-5">
 								<button
-									disabled={isLoading}
+									disabled={loginLoading}
 									className="block w-full mx-auto bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] focus:bg-[var(--primary-color)] text-white rounded-lg px-3 py-3 font-semibold font-gilda-display"
 								>
 									LOGIN NOW

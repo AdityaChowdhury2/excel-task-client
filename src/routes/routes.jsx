@@ -3,6 +3,8 @@ import MainLayout from '../layouts/MainLayout';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import AddTask from '../pages/AddTask';
+import CreateProject from '../pages/CreateProject';
+import PrivateRoute from './PrivateRoute';
 
 export const router = createBrowserRouter([
 	{
@@ -11,7 +13,19 @@ export const router = createBrowserRouter([
 		children: [
 			{
 				path: '/add-task',
-				element: <AddTask />,
+				element: (
+					<PrivateRoute>
+						<AddTask />
+					</PrivateRoute>
+				),
+			},
+			{
+				path: '/create-project',
+				element: (
+					<PrivateRoute>
+						<CreateProject />
+					</PrivateRoute>
+				),
 			},
 		],
 	},
