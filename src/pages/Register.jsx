@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { AiOutlineMail, AiOutlineUser } from 'react-icons/ai';
 import { BiLockAlt } from 'react-icons/bi';
 import { PiEyeClosedLight, PiEyeLight } from 'react-icons/pi';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ErrorMessage } from '@hookform/error-message';
+import { GrUserAdmin } from 'react-icons/gr';
 
 import toast from 'react-hot-toast';
 import { useCreateUserMutation } from '../redux/api/apiService';
@@ -28,6 +29,7 @@ const Register = () => {
 		handleSubmit,
 		formState: { errors },
 		reset,
+		control,
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
@@ -60,7 +62,7 @@ const Register = () => {
 					<form onSubmit={handleSubmit(onSubmitHandler)}>
 						<div className="flex -mx-3">
 							<div className="w-full px-3 mb-5">
-								<label className="text-xs font-semibold px-1">Name</label>
+								<label className="text-xs font-semibold  ml-10">Name</label>
 								<div className="flex">
 									<div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
 										<AiOutlineUser className="text-[var(--primary-color)]" />
@@ -76,7 +78,7 @@ const Register = () => {
 									errors={errors}
 									name="name"
 									render={({ message }) => (
-										<label className="text-xs font-semibold px-1 text-red-500">
+										<label className="text-xs font-semibold  ml-10 text-red-500">
 											{message}
 										</label>
 									)}
@@ -85,7 +87,42 @@ const Register = () => {
 						</div>
 						<div className="flex -mx-3">
 							<div className="w-full px-3 mb-5">
-								<label className="text-xs font-semibold px-1">Email</label>
+								<label className="text-xs font-semibold  ml-10">Role</label>
+								<div className="flex">
+									<div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
+										<GrUserAdmin className="text-[var(--primary-color)]" />
+									</div>
+									<Controller
+										name="role"
+										control={control}
+										defaultValue={''}
+										render={({ field }) => (
+											<select
+												onChange={value => field.onChange(value)}
+												className="select select-bordered w-full "
+											>
+												<option value={''}>Select Role</option>
+												<option value={'admin'}>Admin</option>
+												<option value={'manager'}>Manager</option>
+												<option value={'member'}>Member</option>
+											</select>
+										)}
+									/>
+								</div>
+								<ErrorMessage
+									errors={errors}
+									name="role"
+									render={({ message }) => (
+										<label className="text-xs font-semibold  ml-10 text-red-500">
+											{message}
+										</label>
+									)}
+								/>
+							</div>
+						</div>
+						<div className="flex -mx-3">
+							<div className="w-full px-3 mb-5">
+								<label className="text-xs font-semibold ml-10">Email</label>
 								<div className="flex">
 									<div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
 										<AiOutlineMail className="text-[var(--primary-color)]" />
@@ -101,7 +138,7 @@ const Register = () => {
 									errors={errors}
 									name="email"
 									render={({ message }) => (
-										<label className="text-xs font-semibold px-1 text-red-500">
+										<label className="text-xs font-semibold  ml-10 text-red-500">
 											{message}
 										</label>
 									)}
@@ -111,7 +148,7 @@ const Register = () => {
 
 						<div className="flex -mx-3">
 							<div className="w-full px-3 mb-12">
-								<label className="text-xs font-semibold px-1">Password</label>
+								<label className="text-xs font-semibold  ml-10">Password</label>
 								<div className="flex relative">
 									<div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
 										<BiLockAlt className="text-[var(--primary-color)]" />
@@ -137,7 +174,7 @@ const Register = () => {
 									errors={errors}
 									name="password"
 									render={({ message }) => (
-										<label className="text-xs font-semibold px-1 text-red-500">
+										<label className="text-xs font-semibold  ml-10 text-red-500">
 											{message}
 										</label>
 									)}

@@ -14,7 +14,7 @@ const MainLayout = () => {
 	// // console.log(currentUser);
 	useEffect(() => {
 		if (!isLoading && currentUser?.user) {
-			console.log(currentUser?.user);
+			// console.log(currentUser?.user);
 			dispatch(loggedInUser(currentUser?.user));
 		} else {
 			// dispatch(loggedInUser(null));
@@ -25,42 +25,103 @@ const MainLayout = () => {
 
 	const navLinks = (
 		<>
+			{user?.role === 'manager' && (
+				<>
+					<li>
+						<NavLink
+							to={'/add-task'}
+							className={({ isActive }) =>
+								isActive
+									? 'bg-slate-300 px-3 py-1 rounded-lg'
+									: 'py-1 px-3 rounded-lg'
+							}
+						>
+							Add Task
+						</NavLink>
+					</li>
+					<li>
+						<NavLink
+							to={'/my-projects'}
+							className={({ isActive }) =>
+								isActive
+									? 'bg-slate-300 px-3 py-1 rounded-lg'
+									: 'py-1 px-3 rounded-lg'
+							}
+						>
+							My Projects
+						</NavLink>
+					</li>
+				</>
+			)}
+			{user?.role === 'member' && (
+				<>
+					<li>
+						<NavLink
+							to={'/my-tasks'}
+							className={({ isActive }) =>
+								isActive
+									? 'bg-slate-300 px-3 py-1 rounded-lg'
+									: 'py-1 px-3 rounded-lg'
+							}
+						>
+							Tasks
+						</NavLink>
+					</li>
+				</>
+			)}
+
 			<li>
 				<NavLink
-					to={'/add-task'}
+					to={'/dashboard'}
 					className={({ isActive }) =>
 						isActive
 							? 'bg-slate-300 px-3 py-1 rounded-lg'
 							: 'py-1 px-3 rounded-lg'
 					}
 				>
-					Add Task
+					Dashboard
 				</NavLink>
 			</li>
-			<li>
-				<NavLink
-					to={'/create-project'}
-					className={({ isActive }) =>
-						isActive
-							? 'bg-slate-300 px-3 py-1 rounded-lg'
-							: 'py-1 px-3 rounded-lg'
-					}
-				>
-					Create project
-				</NavLink>
-			</li>
-			<li>
-				<NavLink
-					to={'/all-tasks'}
-					className={({ isActive }) =>
-						isActive
-							? 'bg-slate-300 px-3 py-1 rounded-lg'
-							: 'py-1 px-3 rounded-lg'
-					}
-				>
-					Tasks
-				</NavLink>
-			</li>
+			{user?.role === 'admin' && (
+				<>
+					<li>
+						<NavLink
+							to={'/create-project'}
+							className={({ isActive }) =>
+								isActive
+									? 'bg-slate-300 px-3 py-1 rounded-lg'
+									: 'py-1 px-3 rounded-lg'
+							}
+						>
+							Create project
+						</NavLink>
+					</li>
+					<li>
+						<NavLink
+							to={'/managers'}
+							className={({ isActive }) =>
+								isActive
+									? 'bg-slate-300 px-3 py-1 rounded-lg'
+									: 'py-1 px-3 rounded-lg'
+							}
+						>
+							Managers
+						</NavLink>
+					</li>
+					<li>
+						<NavLink
+							to={'/all-projects'}
+							className={({ isActive }) =>
+								isActive
+									? 'bg-slate-300 px-3 py-1 rounded-lg'
+									: 'py-1 px-3 rounded-lg'
+							}
+						>
+							Projects
+						</NavLink>
+					</li>
+				</>
+			)}
 		</>
 	);
 
@@ -109,18 +170,15 @@ const MainLayout = () => {
 												className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
 											>
 												<li>
-													<a className="justify-between">
-														Profile
-														<span className="badge">New</span>
-													</a>
+													<a className="justify-between">{user?.name}</a>
 												</li>
 												<li>
-													<a>Settings</a>
+													<a>{user?.role}</a>
 												</li>
 												<li
 													onClick={() => {
 														removeToken();
-														// refetch();
+														refetch();
 														dispatch(loggedInUser(null));
 													}}
 												>

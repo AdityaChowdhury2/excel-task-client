@@ -4,7 +4,7 @@ import Select from 'react-select';
 import {
 	useAddProjectMutation,
 	useGetUsersQuery,
-} from '../redux/api/apiService';
+} from '../../redux/api/apiService';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
@@ -114,7 +114,7 @@ const CreateProject = () => {
 											getOptionValue={e => e._id}
 											getOptionLabel={e => e.name}
 											options={restUsers}
-											placeholder="Select members"
+											placeholder="Select Manager"
 											isLoading={isLoading}
 											onChange={value => {
 												field.onChange(value._id);

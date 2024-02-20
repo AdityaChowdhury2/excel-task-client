@@ -60,6 +60,7 @@ const Login = () => {
 			if (response?.data?.user) {
 				dispatch(loggedInUser(response.data.user));
 				refetch();
+				navigate(location.pathname || '/', { replace: true });
 			}
 		} catch (err) {
 			dispatch(userLoggedInError(err.toString()));
@@ -70,16 +71,15 @@ const Login = () => {
 		if (data?.token && getToken() === null) {
 			setToken(data?.token);
 			reset();
-			navigate(location.state || '/', { replace: true });
+			// navigate(location.state || '/', { replace: true });
 		}
-
 		if (error) {
 			toast.error(error.data.message);
 		}
 	}, [data, error]);
 
 	if (currentUser?.user || user) {
-		return <Navigate to={location.state || '/'} replace />;
+		return <Navigate to={'/'} replace />;
 	} else if (loading || isLoading) {
 		return <div>Loading...</div>;
 	}

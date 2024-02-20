@@ -2,20 +2,32 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, Controller } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import DatePicker from 'react-datepicker';
+import Select from 'react-select';
 import 'react-datepicker/dist/react-datepicker.css';
 import { FaRegCalendar } from 'react-icons/fa';
 import * as yup from 'yup';
-import { useAddTaskMutation } from '../redux/api/apiService';
+import { useNavigate } from 'react-router-dom';
+import {
+	useAddTaskMutation,
+	useGetProjectsQuery,
+	useGetUsersQuery,
+} from '../../redux/api/apiService';
 import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react';
 
 const schema = yup.object().shape({
 	title: yup.string().required('Title is required'),
 	description: yup.string().required('Description is required'),
 	dueDate: yup.date().required('Due date is required'),
+	projectId: yup.string().required('Select the project'),
 	priorityLevel: yup
 		.string()
 		.oneOf(['high', 'low', 'medium'], 'Invalid priority level')
 		.required('Priority level is required'),
+	assigned: yup
+		.array()
+		.of(yup.string())
+		.min(1, 'At least one member must be assigned'),
 });
 
 const AddTask = () => {
@@ -24,17 +36,38 @@ const AddTask = () => {
 		handleSubmit,
 		control,
 		formState: { errors },
-		reset,
+		// reset,
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
+	const { data: projects, isLoading: isProjectLoading } = useGetProjectsQuery();
+	const [memberOptions, setMemberOptions] = useState([]);
+	const [projectOptions, setProjectOptions] = useState([]);
+	const { data: restUsers, isLoading } = useGetUsersQuery('member');
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		const user = restUsers?.map(user => {
+			return { value: user._id, label: user.name };
+		});
+		setMemberOptions(user);
+		const project = projects?.map(project => {
+			return { value: project._id, label: project.project_name };
+		});
+		setProjectOptions(project);
+		// const index = restUsers?.findIndex(
+		// 	user => user._id === project.assigned_to
+		// );
+		// setIndex(index);
+	}, [restUsers, projects]);
 	const [addTask] = useAddTaskMutation();
 	const onSubmitHandler = async data => {
+		console.log(data);
 		const toastId = toast.loading('Adding Task ...');
 		const response = await addTask(data);
 		if (response.data?.insertedId) {
 			toast.success('Task added successfully', { id: toastId });
-			reset();
+			navigate('/');
 		}
 	};
 
@@ -52,6 +85,37 @@ const AddTask = () => {
 					</div>
 					<form onSubmit={handleSubmit(onSubmitHandler)}>
 						<div className="w-full px-3 mb-5">
+							<label className="text-xs font-semibold px-1">Project Name</label>
+							<div className=" form-control">
+								<Controller
+									name="projectId"
+									control={control}
+									render={({ field }) => (
+										<Select
+											className="w-full bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
+											defaultOptions
+											options={projectOptions}
+											placeholder="Select project"
+											isLoading={isProjectLoading}
+											onChange={option => {
+												console.log(option);
+												field.onChange(option.value);
+											}}
+										/>
+									)}
+								/>
+							</div>
+							<ErrorMessage
+								errors={errors}
+								name="projectId"
+								render={({ message }) => (
+									<label className="text-xs font-semibold px-1 text-red-500">
+										{message}
+									</label>
+								)}
+							/>
+						</div>
+						<div className="w-full px-3 mb-5">
 							<label className="text-xs font-semibold px-1">Title</label>
 							<div className="flex">
 								{/* <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
@@ -66,7 +130,7 @@ const AddTask = () => {
 							</div>
 							<ErrorMessage
 								errors={errors}
-								name="email"
+								name="title"
 								render={({ message }) => (
 									<label className="text-xs font-semibold px-1 text-red-500">
 										{message}
@@ -78,9 +142,6 @@ const AddTask = () => {
 						<div className="w-full px-3 mb-5">
 							<label className="text-xs font-semibold px-1">Description</label>
 							<div className="flex relative">
-								{/* <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center"> */}
-								{/* <BiLockAlt className="" /> */}
-								{/* </div> */}
 								<textarea
 									type={'text'}
 									{...register('description')}
@@ -90,7 +151,7 @@ const AddTask = () => {
 							</div>
 							<ErrorMessage
 								errors={errors}
-								name="password"
+								name="description"
 								render={({ message }) => (
 									<label className="text-xs font-semibold px-1 text-red-500">
 										{message}
@@ -108,15 +169,20 @@ const AddTask = () => {
 									control={control}
 									defaultValue={''}
 									render={({ field }) => (
-										<select
-											onChange={value => field.onChange(value)}
-											className="select select-bordered w-full "
-										>
-											<option value={''}>Select Priority Level</option>
-											<option value={'high'}>High</option>
-											<option value={'medium'}>Medium</option>
-											<option value={'low'}>Low</option>
-										</select>
+										<Select
+											className="w-full bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
+											defaultOptions
+											options={[
+												{ value: 'high', label: 'High' },
+												{ value: 'medium', label: 'Medium' },
+												{ value: 'low', label: 'Low' },
+											]}
+											placeholder="Select Priority Level"
+											onChange={option => {
+												console.log(option);
+												field.onChange(option.value);
+											}}
+										/>
 									)}
 								/>
 							</div>
@@ -130,6 +196,42 @@ const AddTask = () => {
 								)}
 							/>
 						</div>
+						{memberOptions?.length && (
+							<div className="w-full px-3 mb-5">
+								<label className="text-xs font-semibold px-1">
+									Assign Members
+								</label>
+								<div className=" form-control">
+									<Controller
+										name="assigned"
+										control={control}
+										render={({ field }) => (
+											<Select
+												isMulti
+												className="w-full bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
+												defaultOptions
+												options={memberOptions}
+												placeholder="Select Members"
+												isLoading={isLoading}
+												onChange={option => {
+													console.log(option);
+													field.onChange(option.map(option => option.value));
+												}}
+											/>
+										)}
+									/>
+								</div>
+								<ErrorMessage
+									errors={errors}
+									name="assigned"
+									render={({ message }) => (
+										<label className="text-xs font-semibold px-1 text-red-500">
+											{message}
+										</label>
+									)}
+								/>
+							</div>
+						)}
 						<div className="w-full px-3 mb-12 ">
 							<label className="text-xs font-semibold px-1">Due Date</label>
 							<div className=" form-control">

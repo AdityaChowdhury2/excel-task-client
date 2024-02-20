@@ -5,6 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      'sm': '500px',
+      'md': '600px',
+      'lg': '1000px',
+      'xl': '1120px',
+      '2xl': '1280px',
+    },
     container: {
       center: true,
     },
