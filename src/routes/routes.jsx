@@ -5,6 +5,7 @@ import Register from '../pages/Register';
 import AddTask from '../pages/AddTask';
 import CreateProject from '../pages/CreateProject';
 import PrivateRoute from './PrivateRoute';
+import AllTask from '../pages/AllTask';
 
 export const router = createBrowserRouter([
 	{
@@ -24,6 +25,14 @@ export const router = createBrowserRouter([
 				element: (
 					<PrivateRoute>
 						<CreateProject />
+					</PrivateRoute>
+				),
+			},
+			{
+				path: '/all-tasks',
+				element: (
+					<PrivateRoute>
+						<AllTask />
 					</PrivateRoute>
 				),
 			},

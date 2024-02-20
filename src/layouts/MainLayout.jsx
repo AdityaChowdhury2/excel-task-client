@@ -1,27 +1,27 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
 // import Navbar from '../components/Navbar';
 import { RiMenu2Line } from 'react-icons/ri';
-// import { useGetCurrentUserQuery } from '../redux/api/apiService';
-import { useDispatch } from 'react-redux';
 import { useGetCurrentUserQuery } from '../redux/api/apiService';
-import { loggedInUser, userLoading } from '../redux/features/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { loggedInUser } from '../redux/features/auth/authSlice';
 import { removeToken } from '../utils/localDb';
 import { useEffect } from 'react';
 
 const MainLayout = () => {
-	// const { data: currentUser, isLoading, isError } = useGetCurrentUserQuery();
-
 	const dispatch = useDispatch();
 	const { data: currentUser, isLoading, refetch } = useGetCurrentUserQuery();
-
+	// // console.log(currentUser);
 	useEffect(() => {
-		dispatch(userLoading());
-		console.log('current user is present1', isLoading);
-		if (!isLoading) {
-			console.log('current user is present');
+		if (!isLoading && currentUser?.user) {
+			console.log(currentUser?.user);
 			dispatch(loggedInUser(currentUser?.user));
+		} else {
+			// dispatch(loggedInUser(null));
 		}
-	}, [isLoading]);
+	}, [currentUser?.user, isLoading]);
+
+	const { user } = useSelector(state => state.auth);
 
 	const navLinks = (
 		<>
@@ -47,6 +47,18 @@ const MainLayout = () => {
 					}
 				>
 					Create project
+				</NavLink>
+			</li>
+			<li>
+				<NavLink
+					to={'/all-tasks'}
+					className={({ isActive }) =>
+						isActive
+							? 'bg-slate-300 px-3 py-1 rounded-lg'
+							: 'py-1 px-3 rounded-lg'
+					}
+				>
+					Tasks
 				</NavLink>
 			</li>
 		</>
@@ -76,49 +88,52 @@ const MainLayout = () => {
 							<div className="flex-none hidden lg:block">
 								{/* Navbar menu content here */}
 
-								{currentUser?.user?.email ? (
-									<div className="dropdown dropdown-end">
-										<div
-											tabIndex={0}
-											role="button"
-											className="btn btn-ghost btn-circle avatar"
-										>
-											<div className="w-10 rounded-full">
-												<img
-													alt="Tailwind CSS Navbar component"
-													src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-												/>
-											</div>
-										</div>
-										<ul
-											tabIndex={0}
-											className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-										>
-											<li>
-												<a className="justify-between">
-													Profile
-													<span className="badge">New</span>
-												</a>
-											</li>
-											<li>
-												<a>Settings</a>
-											</li>
-											<li
-												onClick={() => {
-													removeToken();
-													refetch();
-													dispatch(loggedInUser(null));
-												}}
+								{
+									// currentUser?.user?.email ||
+									user?.email ? (
+										<div className="dropdown dropdown-end">
+											<div
+												tabIndex={0}
+												role="button"
+												className="btn btn-ghost btn-circle avatar"
 											>
-												<a>Logout</a>
-											</li>
-										</ul>
-									</div>
-								) : (
-									<Link className="btn" to={'/login'}>
-										Login
-									</Link>
-								)}
+												<div className="w-10 rounded-full">
+													<img
+														alt="Tailwind CSS Navbar component"
+														src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+													/>
+												</div>
+											</div>
+											<ul
+												tabIndex={0}
+												className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+											>
+												<li>
+													<a className="justify-between">
+														Profile
+														<span className="badge">New</span>
+													</a>
+												</li>
+												<li>
+													<a>Settings</a>
+												</li>
+												<li
+													onClick={() => {
+														removeToken();
+														// refetch();
+														dispatch(loggedInUser(null));
+													}}
+												>
+													<a>Logout</a>
+												</li>
+											</ul>
+										</div>
+									) : (
+										<Link className="btn" to={'/login'}>
+											Login
+										</Link>
+									)
+								}
 							</div>
 						</div>
 					</div>
@@ -135,7 +150,7 @@ const MainLayout = () => {
 						{/* Sidebar content here */}
 						<ul>{navLinks}</ul>
 
-						{currentUser?.user?.email ? (
+						{currentUser?.user?.email || user?.email ? (
 							<button
 								className="btn"
 								onClick={() => {
@@ -154,7 +169,6 @@ const MainLayout = () => {
 					</div>
 				</div>
 			</div>
-			{/* <Navbar /> */}
 		</>
 	);
 };

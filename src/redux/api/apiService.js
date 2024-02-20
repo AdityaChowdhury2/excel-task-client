@@ -64,4 +64,4 @@ export const apiService = createApi({
 });
 
 
-export const { useCreateUserMutation, useLoginUserMutation, useGetCurrentUserQuery, useAddTaskMutation, useGetUsersQuery, useAddProjectMutation } = apiService;
+export const { useCreateUserMutation, useLoginUserMutation, useGetCurrentUserQuery, useAddTaskMutation, useGetUsersQuery, useAddProjectMutation, useGetTasksQuery } = apiService;

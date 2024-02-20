@@ -3,17 +3,17 @@ import { useForm } from 'react-hook-form';
 import { AiOutlineMail } from 'react-icons/ai';
 import { BiLockAlt } from 'react-icons/bi';
 import { PiEyeClosedLight, PiEyeLight } from 'react-icons/pi';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ErrorMessage } from '@hookform/error-message';
 import {
-	// useGetCurrentUserQuery,
+	useGetCurrentUserQuery,
 	useLoginUserMutation,
 } from '../redux/api/apiService';
 import { getToken, setToken } from '../utils/localDb';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
 	loggedInUser,
 	userLoading,
@@ -37,10 +37,12 @@ const Login = () => {
 	}, [location?.state]);
 
 	const dispatch = useDispatch();
-	// const { data: currentUser, isLoading } = useGetCurrentUserQuery();
+	const { data: currentUser, isLoading, refetch } = useGetCurrentUserQuery();
 
 	const [loginUser, { data, isLoading: loginLoading, error }] =
 		useLoginUserMutation();
+
+	const { user, loading } = useSelector(state => state.auth);
 
 	const {
 		register,
@@ -55,30 +57,32 @@ const Login = () => {
 		dispatch(userLoading());
 		try {
 			const response = await loginUser(data);
-			// console.log(response);
-			// console.log(response.data.user);
-			await dispatch(loggedInUser(response.data.user));
+			if (response?.data?.user) {
+				dispatch(loggedInUser(response.data.user));
+				refetch();
+			}
 		} catch (err) {
 			dispatch(userLoggedInError(err.toString()));
 		}
 	};
 
 	useEffect(() => {
-		// dispatch(userLoading());
-		// console.log('current user is present1', isLoading);
-		// if (!isLoading) {
-		// 	console.log('current user is present');
-		// 	dispatch(loggedInUser(currentUser?.user));
-		// }
 		if (data?.token && getToken() === null) {
 			setToken(data?.token);
 			reset();
-			navigate(location.state?.from || '/', { replace: true });
+			navigate(location.state || '/', { replace: true });
 		}
+
 		if (error) {
 			toast.error(error.data.message);
 		}
 	}, [data, error]);
+
+	if (currentUser?.user || user) {
+		return <Navigate to={location.state || '/'} replace />;
+	} else if (loading || isLoading) {
+		return <div>Loading...</div>;
+	}
 
 	return (
 		<div className="min-w-screen min-h-[85vh]  flex items-center justify-center px-5 py-5">

@@ -10,7 +10,7 @@ import * as yup from 'yup';
 import toast from 'react-hot-toast';
 import io from 'socket.io-client';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 const socket = io.connect(import.meta.env.VITE_SERVER_URL);
 const projectSchema = yup.object().shape({
@@ -26,7 +26,7 @@ const CreateProject = () => {
 		handleSubmit,
 		control,
 		formState: { errors },
-		// reset,
+		reset,
 	} = useForm({
 		resolver: yupResolver(projectSchema),
 	});
@@ -58,11 +58,11 @@ const CreateProject = () => {
 	const onSubmitHandler = async data => {
 		// console.log(data);
 		try {
-			// const response =
-			await addProject(data);
-			// if (response.data?.insertedId) {
-			// 	navigate('/');
-			// }
+			const response = await addProject(data);
+			if (response.data?.insertedId) {
+				// 	navigate('/');
+				reset();
+			}
 		} catch (error) {
 			console.log(error);
 		}
