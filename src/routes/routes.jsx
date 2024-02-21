@@ -4,8 +4,8 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import AddTask from '../pages/Manager/AddTask';
 import CreateProject from '../pages/Admin/CreateProject';
-import PrivateRoute from './PrivateRoute';
-import AllTask from '../pages/AllTask';
+// import PrivateRoute from './PrivateRoute';
+// import AllTask from '../pages/AllTask';
 import AllManager from '../pages/AllManager';
 import AllProjects from '../pages/Admin/AllProjects';
 import AdminRoute from './AdminRoute';
@@ -24,27 +24,27 @@ export const router = createBrowserRouter([
 			{
 				path: '/add-task',
 				element: (
-					<PrivateRoute>
+					<ManagerRoute>
 						<AddTask />
-					</PrivateRoute>
+					</ManagerRoute>
 				),
 			},
 			{
 				path: '/create-project',
 				element: (
-					<PrivateRoute>
+					<AdminRoute>
 						<CreateProject />
-					</PrivateRoute>
+					</AdminRoute>
 				),
 			},
-			{
-				path: '/all-tasks',
-				element: (
-					<PrivateRoute>
-						<AllTask />
-					</PrivateRoute>
-				),
-			},
+			// {
+			// 	path: '/all-tasks',
+			// 	element: (
+			// 		<PrivateRoute>
+			// 			<AllTask />
+			// 		</PrivateRoute>
+			// 	),
+			// },
 			{
 				path: '/managers',
 				element: (
@@ -56,9 +56,9 @@ export const router = createBrowserRouter([
 			{
 				path: '/all-projects',
 				element: (
-					<PrivateRoute>
+					<AdminRoute>
 						<AllProjects />
-					</PrivateRoute>
+					</AdminRoute>
 				),
 			},
 			{

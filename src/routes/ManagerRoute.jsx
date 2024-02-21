@@ -12,7 +12,13 @@ const ManagerRoute = ({ children }) => {
 	if (loading || isLoading) return <div>Loading...</div>;
 	else if (user?.email && user?.role === 'manager') return <>{children}</>;
 	else
-		return <Navigate to={'/login'} state={location.pathname} replace={true} />;
+		return (
+			<Navigate
+				to={location.state || '/'}
+				state={location.pathname}
+				replace={true}
+			/>
+		);
 };
 
 ManagerRoute.propTypes = {

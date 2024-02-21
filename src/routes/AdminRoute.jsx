@@ -10,9 +10,15 @@ const AdminRoute = ({ children }) => {
 	const { user, loading } = useSelector(state => state.auth);
 
 	if (loading || isLoading) return <div>Loading...</div>;
-	else if (user?.email && user?.role === 'admin') return <>{children}</>;
+	if (user?.email && user?.role === 'admin') return <>{children}</>;
 	else
-		return <Navigate to={'/login'} state={location.pathname} replace={true} />;
+		return (
+			<Navigate
+				to={location.state || '/'}
+				state={location.pathname}
+				replace={true}
+			/>
+		);
 };
 
 AdminRoute.propTypes = {

@@ -41,7 +41,7 @@ export const apiService = createApi({
                 method: 'POST',
                 body: newTask,
             }),
-            invalidatesTags: ['Task'],
+            invalidatesTags: ['Task', "Projects"],
         }),
         updateTaskById: builder.mutation({
             query: ({ id, updates }) => ({

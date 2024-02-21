@@ -11,7 +11,7 @@ import {
 	useGetCurrentUserQuery,
 	useLoginUserMutation,
 } from '../redux/api/apiService';
-import { getToken, setToken } from '../utils/localDb';
+import { setToken } from '../utils/localDb';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -37,10 +37,9 @@ const Login = () => {
 	}, [location?.state]);
 
 	const dispatch = useDispatch();
-	const { data: currentUser, isLoading, refetch } = useGetCurrentUserQuery();
+	const { data: currentUser, isLoading } = useGetCurrentUserQuery();
 
-	const [loginUser, { data, isLoading: loginLoading, error }] =
-		useLoginUserMutation();
+	const [loginUser, { isLoading: loginLoading }] = useLoginUserMutation();
 
 	const { user, loading } = useSelector(state => state.auth);
 
@@ -58,28 +57,31 @@ const Login = () => {
 		try {
 			const response = await loginUser(data);
 			if (response?.data?.user) {
+				console.log('location ', location.state);
 				dispatch(loggedInUser(response.data.user));
-				refetch();
-				navigate(location.pathname || '/', { replace: true });
+				navigate(location.state || '/', { replace: true });
+				setToken(response.data.token);
+				toast.success(response.data.message);
+				reset();
 			}
 		} catch (err) {
 			dispatch(userLoggedInError(err.toString()));
 		}
 	};
 
-	useEffect(() => {
-		if (data?.token && getToken() === null) {
-			setToken(data?.token);
-			reset();
-			// navigate(location.state || '/', { replace: true });
-		}
-		if (error) {
-			toast.error(error.data.message);
-		}
-	}, [data, error]);
+	// useEffect(() => {
+	// 	if (data?.token && getToken() === null) {
+	// 		setToken(data?.token);
+	// 		reset();
+	// 		// navigate(location.state || '/', { replace: true });
+	// 	}
+	// 	if (error) {
+	// 		toast.error(error.data.message);
+	// 	}
+	// }, [data, error]);
 
 	if (currentUser?.user || user) {
-		return <Navigate to={'/'} replace />;
+		return <Navigate to={location.state || '/'} replace />;
 	} else if (loading || isLoading) {
 		return <div>Loading...</div>;
 	}

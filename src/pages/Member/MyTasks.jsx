@@ -1,6 +1,6 @@
 import { useGetTasksQuery } from '../../redux/api/apiService';
 import { useNavigate } from 'react-router-dom';
-import { formatDate } from '../../utils/dateFormatter';
+// import { formatDate } from '../../utils/dateFormatter';
 import { useState } from 'react';
 import { FaRegCalendar } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
@@ -11,7 +11,7 @@ const MyTasks = () => {
 
 	const { data: tasks } = useGetTasksQuery({ searchText, searchBy });
 	const navigate = useNavigate();
-	console.log(searchText);
+	// console.log(searchText);
 	return (
 		<div className="container px-5">
 			<h1 className="text-2xl font-bold text-center my-10">My Tasks</h1>
@@ -81,7 +81,8 @@ const MyTasks = () => {
 							<td>Manager</td>
 							<td>Priority</td>
 							<td>Project</td>
-							<td>Due Date</td>
+							{/* <td>Due Date</td> */}
+							<td>Day&apos;s left</td>
 							<td>Status</td>
 						</tr>
 					</thead>
@@ -98,7 +99,13 @@ const MyTasks = () => {
 									<td>{task?.createdByName}</td>
 									<td>{task?.priorityLevel}</td>
 									<td>{task?.projectName}</td>
-									<td>{formatDate(task?.dueDate)}</td>
+									<td>
+										{task.daysLeft === 1
+											? `${task.daysLeft} day`
+											: `${task.daysLeft} day's`}{' '}
+										left
+									</td>
+									{/* <td>{formatDate(task?.dueDate)}</td> */}
 									<td>
 										{task.status === 'todo'
 											? 'To Do'

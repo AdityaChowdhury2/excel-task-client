@@ -9,10 +9,13 @@ import { removeToken } from '../utils/localDb';
 import { useEffect } from 'react';
 import useSocket from '../hooks/useSocket';
 import toast from 'react-hot-toast';
+// import { useLocation } from 'react-router-dom';
 
 const MainLayout = () => {
 	const dispatch = useDispatch();
 	const { data: currentUser, isLoading, refetch } = useGetCurrentUserQuery();
+	// const location = useLocation();
+	// console.log(location);
 
 	useEffect(() => {
 		if (!isLoading && currentUser?.user) {
@@ -85,20 +88,6 @@ const MainLayout = () => {
 				</>
 			)}
 
-			{user?.email && (
-				<li>
-					<NavLink
-						to={'/dashboard'}
-						className={({ isActive }) =>
-							isActive
-								? 'bg-slate-300 px-3 py-1 rounded-lg'
-								: 'py-1 px-3 rounded-lg'
-						}
-					>
-						Dashboard
-					</NavLink>
-				</li>
-			)}
 			{user?.role === 'admin' && (
 				<>
 					<li>

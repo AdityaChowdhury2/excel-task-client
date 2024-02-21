@@ -10,9 +10,10 @@ const PrivateRoute = ({ children }) => {
 	const { user, loading } = useSelector(state => state.auth);
 
 	if (loading || isLoading) return <div>Loading...</div>;
-	else if (!user?.email)
+	if (!user)
 		return <Navigate to={'/login'} state={location.pathname} replace={true} />;
-	else return <>{children}</>;
+
+	return <>{children}</>;
 };
 
 PrivateRoute.propTypes = {
