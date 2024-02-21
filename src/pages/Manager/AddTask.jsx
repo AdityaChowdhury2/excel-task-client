@@ -1,10 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, Controller } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import DatePicker from 'react-datepicker';
 import Select from 'react-select';
-import 'react-datepicker/dist/react-datepicker.css';
 import { FaRegCalendar } from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -124,7 +123,7 @@ const AddTask = () => {
 								<input
 									type="text"
 									{...register('title')}
-									className="w-full  px-3 py-2 bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
+									className="w-full  px-3 py-2 bg-[#F9F9F9]rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
 									placeholder="Enter task Details..."
 								/>
 							</div>

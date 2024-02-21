@@ -8,7 +8,13 @@ import { FaRegCalendar } from 'react-icons/fa';
 import * as yup from 'yup';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { useUpdateTaskByIdMutation } from '../../redux/api/apiService';
+import {
+	// useGetTasksQuery,
+	useUpdateTaskByIdMutation,
+} from '../../redux/api/apiService';
+import { useEffect } from 'react';
+import useSocket from '../../hooks/useSocket';
+
 const statusOptions = [
 	{
 		label: 'To-do',
@@ -39,6 +45,9 @@ const UpdateTask = () => {
 	});
 	const navigate = useNavigate();
 	const [data] = useLoaderData();
+	const socket = useSocket();
+	// const { refetch } = useGetTasksQuery();
+
 	const {
 		_id,
 		project_name,
@@ -46,9 +55,30 @@ const UpdateTask = () => {
 		description,
 		priorityLevel,
 		manager,
+		managerEmail,
 		dueDate,
 	} = data;
-	const [updateTaskById] = useUpdateTaskByIdMutation();
+	const [updateTaskById, { data: updateTaskByIdResponse, isLoading }] =
+		useUpdateTaskByIdMutation();
+
+	// console.log(updateTaskByIdResponse);
+	useEffect(() => {
+		if (socket === null) return;
+		// console.log('here...');
+		if (updateTaskByIdResponse?.modifiedCount) {
+			console.log('socket emitting...');
+			socket.emit('updateTask', { _id });
+			// socket.on('updateTask', () => {
+			// 	refetch();
+			// });
+			// socket.once('updateTask', data => {
+			// 	toast.success(`Task ${data.title} updated successfully`);
+			// });
+		}
+		return () => {
+			socket.off('updateTask');
+		};
+	}, [updateTaskByIdResponse, socket, managerEmail]);
 
 	const onSubmitHandler = async data => {
 		const toastId = toast.loading('Task status Updating...');
@@ -88,9 +118,6 @@ const UpdateTask = () => {
 						<div className="w-full px-3 mb-5">
 							<label className="text-xs font-semibold px-1">Title</label>
 							<div className="flex">
-								{/* <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
-                                <AiOutlineMail />
-                            </div> */}
 								<input
 									type="text"
 									disabled
@@ -123,33 +150,7 @@ const UpdateTask = () => {
 									value={priorityLevel.toUpperCase()}
 									className="w-full  px-3 py-2 bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
 								/>
-								{/* <Controller
-									name="priorityLevel"
-									control={control}
-									defaultValue={''}
-									render={({ field }) => (
-										<Select
-											className="w-full bg-[#F9F9F9] rounded-lg border-2 border-gray-200 outline-none focus:border-[var(--primary-color)] focus:outline-none focus:ring-0"
-											defaultOptions
-											options={statusOptions}
-											placeholder="Select Priority Level"
-											onChange={option => {
-												console.log(option);
-												field.onChange(option.value);
-											}}
-										/>
-									)}
-								/> */}
 							</div>
-							{/* <ErrorMessage
-								errors={errors}
-								name="priorityLevel"
-								render={({ message }) => (
-									<label className="text-xs font-semibold px-1 text-red-500">
-										{message}
-									</label>
-								)}
-							/> */}
 						</div>
 						<div className="w-full px-3 mb-5">
 							<label className="text-xs font-semibold px-1">Manager</label>
@@ -164,7 +165,12 @@ const UpdateTask = () => {
 							</div>
 						</div>
 						<div className="w-full px-3 mb-5">
-							<label className="text-xs font-semibold px-1">Status</label>
+							<label className="text-xs font-semibold px-1">
+								Status{' '}
+								<span className="text-green-500">
+									(only status can be changed)
+								</span>
+							</label>
 							<div className="flex relative">
 								<Controller
 									name="status"
@@ -230,8 +236,10 @@ const UpdateTask = () => {
 						</div>
 						<div className="w-full px-3 mb-5">
 							<button
-								// disabled={isLoading}
-								className="block w-full mx-auto bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] focus:bg-[var(--primary-color)] text-white rounded-lg px-3 py-3 font-semibold font-gilda-display"
+								disabled={isLoading}
+								className={`${
+									isLoading ? 'hover:cursor-not-allowed' : ''
+								} block w-full mx-auto bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] focus:bg-[var(--primary-color)] text-white rounded-lg px-3 py-3 font-semibold font-gilda-display`}
 							>
 								Update Status
 							</button>

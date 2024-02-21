@@ -7,19 +7,34 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loggedInUser } from '../redux/features/auth/authSlice';
 import { removeToken } from '../utils/localDb';
 import { useEffect } from 'react';
+import useSocket from '../hooks/useSocket';
+import toast from 'react-hot-toast';
 
 const MainLayout = () => {
 	const dispatch = useDispatch();
 	const { data: currentUser, isLoading, refetch } = useGetCurrentUserQuery();
-	// // console.log(currentUser);
+
 	useEffect(() => {
 		if (!isLoading && currentUser?.user) {
-			// console.log(currentUser?.user);
 			dispatch(loggedInUser(currentUser?.user));
 		} else {
 			// dispatch(loggedInUser(null));
 		}
 	}, [currentUser?.user, isLoading]);
+
+	const socket = useSocket();
+
+	useEffect(() => {
+		if (socket === null) return;
+		socket.on('updateTask', ([data]) => {
+			if (user?.email === data.createdBy) {
+				toast.success(`Task ${data.title} status updated`);
+			}
+		});
+		return () => {
+			socket.off('updateTask');
+		};
+	}, [socket]);
 
 	const { user } = useSelector(state => state.auth);
 
@@ -70,18 +85,20 @@ const MainLayout = () => {
 				</>
 			)}
 
-			<li>
-				<NavLink
-					to={'/dashboard'}
-					className={({ isActive }) =>
-						isActive
-							? 'bg-slate-300 px-3 py-1 rounded-lg'
-							: 'py-1 px-3 rounded-lg'
-					}
-				>
-					Dashboard
-				</NavLink>
-			</li>
+			{user?.email && (
+				<li>
+					<NavLink
+						to={'/dashboard'}
+						className={({ isActive }) =>
+							isActive
+								? 'bg-slate-300 px-3 py-1 rounded-lg'
+								: 'py-1 px-3 rounded-lg'
+						}
+					>
+						Dashboard
+					</NavLink>
+				</li>
+			)}
 			{user?.role === 'admin' && (
 				<>
 					<li>
@@ -142,7 +159,14 @@ const MainLayout = () => {
 									<RiMenu2Line />
 								</label>
 							</div>
-							<div className=" px-2 mx-2">Task Management</div>
+							<div className=" px-2 uppercase mx-2 font-thin">
+								<Link to={'/'}>
+									<span className=" tracking-[1.2rem] font-extrabold">
+										Task
+									</span>{' '}
+									<br /> Management
+								</Link>
+							</div>
 							<ul className="hidden lg:flex flex-1 justify-center gap-4">
 								{navLinks}
 							</ul>
@@ -182,7 +206,7 @@ const MainLayout = () => {
 														dispatch(loggedInUser(null));
 													}}
 												>
-													<a>Logout</a>
+													<a className="text-red-500 font-bold">Logout</a>
 												</li>
 											</ul>
 										</div>

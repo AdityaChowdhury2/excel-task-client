@@ -85,11 +85,8 @@ const Login = () => {
 	}
 
 	return (
-		<div className="min-w-screen min-h-[85vh]  flex items-center justify-center px-5 py-5">
-			<div
-				className="bg-gray-100 text-gray-500 rounded-3xl shadow-xl overflow-hidden"
-				style={{ minWidth: '600px' }}
-			>
+		<div className="min-h-[85vh]  flex items-center justify-center px-5 py-5">
+			<div className="bg-gray-100 text-gray-500 rounded-3xl shadow-xl overflow-hidden min-w-full md:min-w-min">
 				{isShowWelComeMessage && (
 					<p className="text-green-400 text-center mt-5">
 						Welcome, Please Login to access you account
@@ -105,7 +102,7 @@ const Login = () => {
 					<form onSubmit={handleSubmit(onSubmitHandler)}>
 						<div className="flex -mx-3">
 							<div className="w-full px-3 mb-5">
-								<label className="text-xs font-semibold px-1">Email</label>
+								<label className="text-xs font-semibold px-1 ml-8">Email</label>
 								<div className="flex">
 									<div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
 										<AiOutlineMail />
@@ -131,7 +128,9 @@ const Login = () => {
 
 						<div className="flex -mx-3">
 							<div className="w-full px-3 mb-12">
-								<label className="text-xs font-semibold px-1">Password</label>
+								<label className="text-xs font-semibold px-1 ml-8">
+									Password
+								</label>
 								<div className="flex relative">
 									<div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
 										<BiLockAlt className="" />

@@ -52,7 +52,7 @@ export const apiService = createApi({
             invalidatesTags: ['Task'],
         }),
         getTasks: builder.query({
-            query: () => 'tasks',
+            query: ({ searchText, searchBy }) => `tasks?searchText=${searchText}&searchBy=${searchBy || 'title'}`,
             providesTags: ['Task'],
         }),
         getUsers: builder.query({

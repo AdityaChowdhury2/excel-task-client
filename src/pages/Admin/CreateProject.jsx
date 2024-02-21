@@ -8,11 +8,10 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
-import io from 'socket.io-client';
 import { useEffect } from 'react';
+import useSocket from '../../hooks/useSocket';
 // import { useNavigate } from 'react-router-dom';
 
-const socket = io.connect(import.meta.env.VITE_SERVER_URL);
 const projectSchema = yup.object().shape({
 	project_name: yup
 		.string()
@@ -21,6 +20,7 @@ const projectSchema = yup.object().shape({
 	assigned_to: yup.string().required('Assigned to is required'),
 });
 const CreateProject = () => {
+	const socket = useSocket();
 	const {
 		register,
 		handleSubmit,
@@ -41,19 +41,20 @@ const CreateProject = () => {
 	] = useAddProjectMutation();
 
 	useEffect(() => {
-		socket.connect();
+		if (socket === null) return;
+
 		if (addProjectResponse?.insertedId) {
-			console.log('Adding Task ...');
+			// console.log('Adding Task ...');
 			socket.emit('createProject', addProjectResponse?.insertedId);
 			socket.once('createProject', data => {
-				console.log('Adding Task from socket');
+				// console.log('Adding Task from socket');
 				toast.success(`Project ${data.project_name} created successfully`);
 			});
 		}
 		return () => {
-			socket.disconnect();
+			socket.off('createProject');
 		};
-	}, [addProjectResponse]);
+	}, [socket, addProjectResponse]);
 
 	const onSubmitHandler = async data => {
 		// console.log(data);

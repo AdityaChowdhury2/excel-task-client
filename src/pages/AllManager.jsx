@@ -9,18 +9,18 @@ const AllManager = () => {
 			<div className="overflow-x-auto">
 				<table className="table">
 					<thead>
-						<tr>
+						<tr className="border-t-2 border-l-2 border-r-2 text-[var(--primary-color)]">
 							<th></th>
-							<td className="text-center">Name</td>
+							<td className="text-center border-l-2 border-r-2 ">Name</td>
 							<td className="text-center">Role</td>
 						</tr>
 					</thead>
 					<tbody>
 						{managers &&
 							managers.map((user, idx) => (
-								<tr key={user._id} className={'hover'}>
-									<th className="text-center">{idx + 1}</th>
-									<td className="text-center">{user.name}</td>
+								<tr key={user._id} className="border-2 hover">
+									<th className="text-center border-r-2">{idx + 1}</th>
+									<td className="text-center border-r-2">{user.name}</td>
 									<td className="text-center">{user.role}</td>
 								</tr>
 							))}

@@ -13,8 +13,6 @@ const MyProjects = () => {
 						<tr>
 							<th></th>
 							<td className="text-center">Name</td>
-							{/* <td className="text-center">Assigned To</td> */}
-							{/* <td className="text-center">Action</td> */}
 						</tr>
 					</thead>
 					<tbody>
@@ -27,25 +25,6 @@ const MyProjects = () => {
 								>
 									<th className="text-center">{idx + 1}</th>
 									<td className="text-center">{project.project_name}</td>
-									{/* <td className="text-center">{project.assigned_to_name}</td> */}
-									{/* <td className="flex justify-center gap-2">
-                                <button
-                                    className="btn btn-sm"
-                                    onClick={() => handleOpenModal(project._id)}
-                                >
-                                    <FaRegEdit color="green" />
-                                </button>
-                                <button
-                                    className="btn btn-sm"
-                                    onClick={() => handleDelete(project._id)}
-                                >
-                                    <FaTrashAlt color="red" />
-                                </button>
-                                <UpdateProjectModal
-                                    project={project}
-                                    handleCloseModal={handleCloseModal}
-                                />
-                            </td> */}
 								</tr>
 							))}
 					</tbody>

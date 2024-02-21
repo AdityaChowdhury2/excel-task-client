@@ -1,12 +1,11 @@
 import {
 	useDeleteProjectMutation,
-	// useGetCurrentUserQuery,
 	useGetProjectsQuery,
 } from '../../redux/api/apiService';
 import { FaTrashAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { FaRegEdit } from 'react-icons/fa';
-// import { useState } from 'react';
+
 import UpdateProjectModal from '../../components/UpdateProjectModal';
 
 const AllProjects = () => {
@@ -21,9 +20,7 @@ const AllProjects = () => {
 	};
 
 	const [deleteProject] = useDeleteProjectMutation();
-	// const handleUpdate = id => {
 
-	// };
 	const handleDelete = id => {
 		Swal.fire({
 			title: 'Are you sure?',
@@ -52,22 +49,26 @@ const AllProjects = () => {
 		<div className="container">
 			<h1 className="text-2xl font-bold text-center my-10">All Projects</h1>
 			<div className="overflow-x-auto">
-				<table className="table">
+				<table className="table border-2">
 					<thead>
-						<tr>
-							<th></th>
-							<td className="text-center">Name</td>
-							<td className="text-center">Assigned To</td>
+						<tr className="text-[var(--primary-color)] border-b-2">
+							<th className="border-r-2"></th>
+							<td className="text-center ">Name</td>
+							<td className="text-center border-l-2 border-r-2">Assigned To</td>
 							<td className="text-center">Action</td>
 						</tr>
 					</thead>
 					<tbody>
 						{projects &&
 							projects.map((project, idx) => (
-								<tr key={project._id} className={'hover'}>
-									<th className="text-center">{idx + 1}</th>
-									<td className="text-center">{project.project_name}</td>
-									<td className="text-center">{project.assigned_to_name}</td>
+								<tr key={project._id} className={'hover '}>
+									<th className="text-center border-r-2">{idx + 1}</th>
+									<td className="text-center border-r-2">
+										{project.project_name}
+									</td>
+									<td className="text-center border-r-2">
+										{project.assigned_to_name}
+									</td>
 									<td className="flex justify-center gap-2">
 										<button
 											className="btn btn-sm"
