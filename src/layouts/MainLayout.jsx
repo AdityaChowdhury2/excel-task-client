@@ -25,6 +25,7 @@ const MainLayout = () => {
 		}
 	}, [currentUser?.user, isLoading]);
 
+	const { user } = useSelector(state => state.auth);
 	const socket = useSocket();
 
 	useEffect(() => {
@@ -37,9 +38,7 @@ const MainLayout = () => {
 		return () => {
 			socket.off('updateTask');
 		};
-	}, [socket]);
-
-	const { user } = useSelector(state => state.auth);
+	}, [socket, user?.email]);
 
 	const navLinks = (
 		<>
@@ -87,6 +86,30 @@ const MainLayout = () => {
 					</li>
 				</>
 			)}
+			<li>
+				<NavLink
+					to={'/about'}
+					className={({ isActive }) =>
+						isActive
+							? 'bg-slate-300 px-3 py-1 rounded-lg'
+							: 'py-1 px-3 rounded-lg'
+					}
+				>
+					About
+				</NavLink>
+			</li>
+			<li>
+				<NavLink
+					to={'/contact'}
+					className={({ isActive }) =>
+						isActive
+							? 'bg-slate-300 px-3 py-1 rounded-lg'
+							: 'py-1 px-3 rounded-lg'
+					}
+				>
+					Contact
+				</NavLink>
+			</li>
 
 			{user?.role === 'admin' && (
 				<>
@@ -137,7 +160,7 @@ const MainLayout = () => {
 				<input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
 				<div className="drawer-content  flex flex-col">
 					{/* Navbar */}
-					<div className="w-full  navbar bg-base-300 ">
+					<div className="w-full  navbar mt-5">
 						<div className="container">
 							<div className="flex-none  lg:hidden">
 								<label
@@ -148,7 +171,7 @@ const MainLayout = () => {
 									<RiMenu2Line />
 								</label>
 							</div>
-							<div className=" px-2 uppercase mx-2 font-thin">
+							<div className=" px-2 uppercase mx-2 font-thin text-[var(--primary-color)]">
 								<Link to={'/'}>
 									<span className=" tracking-[1.2rem] font-extrabold">
 										Task
@@ -200,7 +223,10 @@ const MainLayout = () => {
 											</ul>
 										</div>
 									) : (
-										<Link className="btn" to={'/login'}>
+										<Link
+											className="btn btn-sm bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] text-white"
+											to={'/login'}
+										>
 											Login
 										</Link>
 									)

@@ -19,6 +19,7 @@ import {
 	userLoading,
 	userLoggedInError,
 } from '../redux/features/auth/authSlice';
+import Loading from '../components/Loading';
 
 const schema = yup.object().shape({
 	// name: yup.string().required(),
@@ -69,21 +70,10 @@ const Login = () => {
 		}
 	};
 
-	// useEffect(() => {
-	// 	if (data?.token && getToken() === null) {
-	// 		setToken(data?.token);
-	// 		reset();
-	// 		// navigate(location.state || '/', { replace: true });
-	// 	}
-	// 	if (error) {
-	// 		toast.error(error.data.message);
-	// 	}
-	// }, [data, error]);
-
 	if (currentUser?.user || user) {
 		return <Navigate to={location.state || '/'} replace />;
 	} else if (loading || isLoading) {
-		return <div>Loading...</div>;
+		return <Loading />;
 	}
 
 	return (

@@ -61,25 +61,23 @@ const UpdateTask = () => {
 	const [updateTaskById, { data: updateTaskByIdResponse, isLoading }] =
 		useUpdateTaskByIdMutation();
 
-	// console.log(updateTaskByIdResponse);
 	useEffect(() => {
 		if (socket === null) return;
-		// console.log('here...');
 		if (updateTaskByIdResponse?.modifiedCount) {
-			console.log('socket emitting...');
 			socket.emit('updateTask', { _id });
+			navigate('/my-tasks');
 		}
 		return () => {
 			socket.off('updateTask');
 		};
-	}, [updateTaskByIdResponse, socket, managerEmail]);
+	}, [updateTaskByIdResponse, socket, _id, managerEmail]);
 
 	const onSubmitHandler = async data => {
 		const toastId = toast.loading('Task status Updating...');
 		const response = await updateTaskById({ id: _id, updates: data });
 		if (response.data.modifiedCount) {
 			toast.success('Task Status updated successfully', { id: toastId });
-			navigate('/my-tasks');
+			//
 		} else {
 			toast.error('Task Status Failed', { id: toastId });
 		}
@@ -187,7 +185,6 @@ const UpdateTask = () => {
 											options={statusOptions}
 											placeholder="Select status"
 											onChange={option => {
-												console.log(option);
 												field.onChange(option.value);
 											}}
 										/>

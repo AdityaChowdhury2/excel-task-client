@@ -6,7 +6,7 @@ import AddTask from '../pages/Manager/AddTask';
 import CreateProject from '../pages/Admin/CreateProject';
 // import PrivateRoute from './PrivateRoute';
 // import AllTask from '../pages/AllTask';
-import AllManager from '../pages/AllManager';
+import AllManager from '../pages/Admin/AllManager';
 import AllProjects from '../pages/Admin/AllProjects';
 import AdminRoute from './AdminRoute';
 import MyProjects from '../pages/Manager/MyProjects';
@@ -15,12 +15,29 @@ import MemberRoute from './MemberRoute';
 import MyTasks from '../pages/Member/MyTasks';
 import UpdateTask from '../pages/Member/UpdateTask';
 import { getToken } from '../utils/localDb';
+import Home from '../pages/Home';
+import About from '../pages/About';
+import Contact from '../pages/Contact';
+import ErrorPage from '../pages/ErrorPage';
 
 export const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <MainLayout />,
+		errorElement: <ErrorPage />,
 		children: [
+			{
+				path: '/',
+				element: <Home />,
+			},
+			{
+				path: '/about',
+				element: <About />,
+			},
+			{
+				path: '/contact',
+				element: <Contact />,
+			},
 			{
 				path: '/add-task',
 				element: (

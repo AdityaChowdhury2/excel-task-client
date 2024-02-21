@@ -87,11 +87,11 @@ const MyTasks = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{tasks &&
+						{tasks && tasks.length ? (
 							tasks.map((task, idx) => (
 								<tr
 									key={task._id}
-									className={'hover'}
+									className={'hover hover:cursor-pointer'}
 									onClick={() => navigate(`/my-tasks/${task._id}`)}
 								>
 									<th>{idx + 1}</th>
@@ -114,7 +114,14 @@ const MyTasks = () => {
 											: 'Completed'}
 									</td>
 								</tr>
-							))}
+							))
+						) : (
+							<tr>
+								<td colSpan={7} className="text-center">
+									No tasks found
+								</td>
+							</tr>
+						)}
 					</tbody>
 				</table>
 			</div>

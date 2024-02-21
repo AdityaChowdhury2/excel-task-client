@@ -1,4 +1,4 @@
-import { useGetUsersQuery } from '../redux/api/apiService';
+import { useGetUsersQuery } from '../../redux/api/apiService';
 
 const AllManager = () => {
 	const { data: managers } = useGetUsersQuery('manager');
